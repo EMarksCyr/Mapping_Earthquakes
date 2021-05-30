@@ -116,25 +116,39 @@ let baseMaps = {
 let map = L.map('mapid', {
   center: [43.7, -79.3],
   zoom: 11,
-  layers: [satelliteStreets]
+  layers: [streets]
 })
 
 // Accessing the Toronto airline routes GeoJSON URL.
 let torontoData = "https://raw.githubusercontent.com/EMarksCyr/Mapping_Earthquakes/main/torontoRoutes.json";
 
 // Accessing the Toronto neighborhoods GeoJSON URL.
-let torontoHoods = "https://raw.githubusercontent.com/<GitHub_name>/Mapping_Earthquakes/main/torontoNeighborhoods.json";
+let torontoHoods = "https://raw.githubusercontent.com/EMarksCyr/Mapping_Earthquakes/main/torontoNeighborhoods.json";
 
 // Pass our map layers into our layers control and add the layers control to the map.
 L.control.layers(baseMaps).addTo(map);
 
 //specify style of lines 
 let myStyle = {
-  color: "#ffffa1",
-  weight: 2
+  color: "blue",
+  fillColor: "yellow",
+  weight: 1
 }
 
 // Grabbing our GeoJSON data.
+d3.json(torontoHoods).then(function (data) {
+  console.log(data);
+  // Creating a GeoJSON layer with the retrieved data.
+  L.geoJson(data, {
+    style: myStyle,
+    onEachFeature: function (feature, layer) {
+      layer.bindPopup("<h3> Neighbourhood: " + feature.properties.AREA_NAME)
+    }
+  })
+    .addTo(map);
+});
+
+/* Grabbing our GeoJSON data.
 d3.json(torontoData).then(function (data) {
   console.log(data);
   // Creating a GeoJSON layer with the retrieved data.
@@ -146,6 +160,7 @@ d3.json(torontoData).then(function (data) {
     }
   })
     .addTo(map);
-});
+});*/
+
 
 
